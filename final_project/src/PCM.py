@@ -5,8 +5,15 @@ from FCM import FCM
 class PCM(FCM): # A possibilistic approach to clustering; Possibilistic C-Means (PCM)
     def __init__(self, data, num_clusters, m=2, max_epochs=1000, tol=1e-2):
         FCM.__init__(self, data, num_clusters, m, max_epochs, tol)
+        self.n = None
 
-    def update_membership(self):
+    def update_ni(self, distances):
+        return np.sum((self.membership[:, :, np.newaxis] ** self.m) * distances[:, np.newaxis, :], axis=0) / np.sum(self.membership[:, :, np.newaxis] ** self.m, axis=0)
+
+    def update_membership(self, data):
+        distances = np.array([self.get_distance(d) for d in data])
+
+    '''def update_membership(self):
         membership = np.zeros((self.data.shape[0], self.num_clusters))
 
         for i in range(self.data.shape[0]):
@@ -34,4 +41,4 @@ class PCM(FCM): # A possibilistic approach to clustering; Possibilistic C-Means 
 
             centers[j] /= denominator
 
-        return centers
+        return centers'''
